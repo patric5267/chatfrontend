@@ -10,7 +10,7 @@ const Chat = () => {
     const [input, setInput] = useState("")
     const [message, setMessage] = useState([])
     const socket = useMemo(() =>
-        io("https://chatbackend-1.onrender.com/", {
+        io("https://chatbackend-6uoz.onrender.com/", {
             withCredentials: true
         })
         , [])
