@@ -16,12 +16,12 @@ const Chat = () => {
     const [input, setInput] = useState("")
     const [message, setMessage] = useState([])
     const socket = useMemo(() =>
-        io("https://chatbackend-33k0.onrender.com", {
+        io("http://localhost:5000", {
             withCredentials: true
         })
         , [])
     const handleclick = () => {
-        socket.emit("message", { msg: input, name: location.state.name})
+        socket.emit("message", { msg: input, name: location.state.name , img:location.state.image})
         setInput("")
     }
     useEffect(() => {
@@ -43,7 +43,7 @@ const Chat = () => {
                 // console.log({ name: location.state.image, msg: data.msg });
             }
             else {
-                setMessage((message)=>[...message , {name:location.state.image , msg:data.msg , align:'right'} ])
+                setMessage((message)=>[...message , {name:data.img , msg:data.msg , align:'right'} ])
                 // console.log({ name: location.state.image, msg: data.msg });
             }
         })
