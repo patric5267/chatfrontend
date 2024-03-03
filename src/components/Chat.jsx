@@ -1,16 +1,22 @@
 import React from 'react'
 import { useEffect, useMemo, useState } from 'react'
-import { Link, useLocation, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { io } from 'socket.io-client'
 import bg from '../assets/bg.png'
 import { IoIosSend } from "react-icons/io";
-
+import {motion}  from 'framer-motion'
 const Chat = () => {
+    const navigate = useNavigate()
     const location = useLocation()
+    useEffect(()=>{
+       if(!location.state){
+        navigate("/")
+       }
+    },[location])
     const [input, setInput] = useState("")
     const [message, setMessage] = useState([])
     const socket = useMemo(() =>
-        io("https://chatbackend-6uoz.onrender.com/", {
+        io("https://chatbackend-x9f5.onrender.com", {
             withCredentials: true
         })
         , [])
@@ -47,10 +53,10 @@ const Chat = () => {
         return () => {
             socket.disconnect()
         }
-    }, [socket, name])
+    }, [socket])
     return (
         <>
-            <div className='maincontainer h-[100svh] relative' >
+       <div className='maincontainer h-[100svh] relative' >
                 <img className='h-full w-full' src={bg} alt="" />
                 <div className='chatcontainer absolute px-3 lg:px-0 flex w-full h-full  justify-center items-center    top-0 left-0'>
                     <div className='flex flex-col justify-center items-center  w-full md:w-[48rem]'>
@@ -63,29 +69,67 @@ const Chat = () => {
                                 message.map((i, index) => {
                                     if (i.align === 'center') {
                                         return (
-                                            <div key={index} className=" my-2   flex justify-center   ">
+                                            <motion.div
+                                            initial={{
+                                                scale:0,
+                                                opacity:0
+                                            }}
+                                            animate={{
+                                                scale:1,
+                                                opacity:1
+                                            }}
+                                            transition={{
+                                                duration:1,
+                                                type:"spring"
+                                            }}
+                                            key={index} className=" my-2   flex justify-center   ">
                                                 <p className=' text-white text-xl'>{i.msg}</p>
-                                            </div>
+                                            </motion.div>
                                         )
                                     }
                                     else if (i.align === "right") {
                                         return (
-                                            <div key={index} className=" my-2  right flex justify-start px-2 " >
+                                            <motion.div
+                                            initial={{
+                                                x:"-100vw",
+                                                opacity:0
+                                            }}
+                                            animate={{
+                                                x:0,
+                                                opacity:1
+                                            }}
+                                            transition={{
+                                                duration:1,
+                                                type:"spring"
+                                            }}
+                                            key={index} className=" my-2  right flex justify-start px-2 " >
                                                 <div className='    overflow-hidden flex justify-start gap-1 items-start  w-[50%]  text-lg'>
                                                     <img src={i.name} alt="" className=' w-10 bg-white rounded-full  h-10' />
-
                                                     <p className=' px-2 py-1 bg-black rounded inline-block text-white'>{i.msg}</p> </div>
-                                            </div>
+                                            </motion.div>
                                         )
                                     }
                                     else {
                                         return (
-                                            <div key={index} className=" my-2  left flex justify-end px-2 ">
+                                            <motion.div
+                                            initial={{
+                                                x:"100vw",
+                                                opacity:0
+                                            }}
+                                            animate={{
+                                                x:0,
+                                                opacity:1
+                                            }}
+                                            transition={{
+                                                duration:1,
+                                                type:"spring"
+                                            }}
+                                            key={index} className=" my-2  left flex justify-end px-2 ">
                                                 <div className='    overflow-hidden flex justify-end  gap-1 items-start w-[50%]  text-lg'>
                                                     <p className=' px-2 py-1 bg-white rounded inline-block text-black'>{i.msg}</p>
                                                     <img src={i.name} alt="" className=' w-10 bg-white rounded-full h-10' />
                                                 </div>
-                                            </div>
+                                            </motion.div>
                                         )
                                     }
                                 })
@@ -93,7 +137,7 @@ const Chat = () => {
                         </div>
                         <div className="inputbox w-full relative">
                             <input type="text" value={input} placeholder='Type message...' className=' w-full py-2 pl-1 bg-slate-700 rounded-br rounded-bl text-white outline-none' onChange={(e) => setInput(e.target.value)} />
-                            <IoIosSend className=' absolute top-[0.7rem] text-white text-xl right-1' onClick={handleclick} />
+                            <IoIosSend className=' absolute top-[0.7rem] text-white text-xl right-1' onClick={input===""?()=>alert("Message is required"):handleclick} />
                         </div>
                     </div>
                 </div>
