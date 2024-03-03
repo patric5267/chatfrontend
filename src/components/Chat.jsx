@@ -16,7 +16,7 @@ const Chat = () => {
     const [input, setInput] = useState("")
     const [message, setMessage] = useState([])
     const socket = useMemo(() =>
-        io("http://localhost:5000", {
+        io("https://chatbackend-sray.onrender.com", {
             withCredentials: true
         })
         , [])
